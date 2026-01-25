@@ -1,24 +1,24 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ProfileScreen from "@/screens/ProfileScreen";
+import AdminDashboardScreen from "@/screens/AdminDashboardScreen";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 
-export type ProfileStackParamList = {
-  Profile: undefined;
+export type AdminStackParamList = {
+  AdminDashboard: undefined;
 };
 
-const Stack = createNativeStackNavigator<ProfileStackParamList>();
+const Stack = createNativeStackNavigator<AdminStackParamList>();
 
-export default function ProfileStackNavigator() {
+export default function AdminStackNavigator() {
   const screenOptions = useScreenOptions();
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="AdminDashboard"
+        component={AdminDashboardScreen}
         options={{
-          headerTitle: "Profile",
+          headerTitle: "Admin Dashboard",
         }}
       />
     </Stack.Navigator>

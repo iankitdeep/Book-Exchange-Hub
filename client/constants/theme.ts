@@ -1,30 +1,41 @@
 import { Platform } from "react-native";
 
-const tintColorLight = "#007AFF";
-const tintColorDark = "#0A84FF";
-
 export const Colors = {
   light: {
-    text: "#11181C",
+    text: "#2C1810",
+    textSecondary: "#6B5C56",
     buttonText: "#FFFFFF",
-    tabIconDefault: "#687076",
-    tabIconSelected: tintColorLight,
-    link: "#007AFF",
-    backgroundRoot: "#FFFFFF", // Elevation 0
-    backgroundDefault: "#F2F2F2", // Elevation 1
-    backgroundSecondary: "#E6E6E6", // Elevation 2
-    backgroundTertiary: "#D9D9D9", // Elevation 3
+    tabIconDefault: "#6B5C56",
+    tabIconSelected: "#8B4513",
+    link: "#D4762E",
+    primary: "#8B4513",
+    primaryLight: "#C19A6B",
+    accent: "#D4762E",
+    success: "#4A7C59",
+    error: "#C44536",
+    border: "#E8DCD0",
+    backgroundRoot: "#FFFEF9",
+    backgroundDefault: "#FBF7F2",
+    backgroundSecondary: "#F5EDE4",
+    backgroundTertiary: "#EEE5DA",
   },
   dark: {
-    text: "#ECEDEE",
+    text: "#F5EDE4",
+    textSecondary: "#A89B94",
     buttonText: "#FFFFFF",
-    tabIconDefault: "#9BA1A6",
-    tabIconSelected: tintColorDark,
-    link: "#0A84FF",
-    backgroundRoot: "#1F2123", // Elevation 0
-    backgroundDefault: "#2A2C2E", // Elevation 1
-    backgroundSecondary: "#353739", // Elevation 2
-    backgroundTertiary: "#404244", // Elevation 3
+    tabIconDefault: "#A89B94",
+    tabIconSelected: "#C19A6B",
+    link: "#D4762E",
+    primary: "#C19A6B",
+    primaryLight: "#8B4513",
+    accent: "#D4762E",
+    success: "#5A9C69",
+    error: "#E45746",
+    border: "#3A322D",
+    backgroundRoot: "#1F1A17",
+    backgroundDefault: "#2A2420",
+    backgroundSecondary: "#352E29",
+    backgroundTertiary: "#403832",
   },
 };
 
@@ -54,24 +65,32 @@ export const BorderRadius = {
 };
 
 export const Typography = {
-  h1: {
+  display: {
     fontSize: 32,
     lineHeight: 40,
     fontWeight: "700" as const,
+    fontFamily: Platform.select({ ios: "ui-serif", default: "serif" }),
   },
-  h2: {
-    fontSize: 28,
-    lineHeight: 36,
-    fontWeight: "700" as const,
-  },
-  h3: {
+  h1: {
     fontSize: 24,
     lineHeight: 32,
+    fontWeight: "700" as const,
+    fontFamily: Platform.select({ ios: "ui-serif", default: "serif" }),
+  },
+  h2: {
+    fontSize: 20,
+    lineHeight: 28,
+    fontWeight: "600" as const,
+    fontFamily: Platform.select({ ios: "ui-serif", default: "serif" }),
+  },
+  h3: {
+    fontSize: 18,
+    lineHeight: 26,
     fontWeight: "600" as const,
   },
   h4: {
-    fontSize: 20,
-    lineHeight: 28,
+    fontSize: 16,
+    lineHeight: 24,
     fontWeight: "600" as const,
   },
   body: {
@@ -84,6 +103,13 @@ export const Typography = {
     lineHeight: 20,
     fontWeight: "400" as const,
   },
+  caption: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "500" as const,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.5,
+  },
   link: {
     fontSize: 16,
     lineHeight: 24,
@@ -91,15 +117,28 @@ export const Typography = {
   },
 };
 
+export const Shadows = {
+  fab: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  card: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+};
+
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: "system-ui",
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: "ui-serif",
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: "ui-rounded",
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: "ui-monospace",
   },
   default: {
@@ -109,10 +148,9 @@ export const Fonts = Platform.select({
     mono: "monospace",
   },
   web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded:
-      "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    sans: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    serif: "Literata, Georgia, 'Times New Roman', serif",
+    rounded: "'SF Pro Rounded', sans-serif",
+    mono: "SFMono-Regular, Menlo, Monaco, Consolas, monospace",
   },
 });

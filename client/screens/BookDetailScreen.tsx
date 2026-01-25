@@ -1,0 +1,270 @@
+import React from "react";
+import { View, StyleSheet, Image, ScrollView, Pressable } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+
+import { ThemedText } from "@/components/ThemedText";
+import { ConditionBadge } from "@/components/ConditionBadge";
+import { Button } from "@/components/Button";
+import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/contexts/AuthContext";
+import { BorderRadius, Spacing, Shadows } from "@/constants/theme";
+import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/query-client";
+
+type BookCondition = "like_new" | "good" | "fair" | "poor";
+
+interface BookDetail {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  genre: string;
+  condition: BookCondition;
+  price: string;
+  coverImageUrl?: string;
+  sellerId: string;
+  sellerName: string;
+  createdAt: string;
+}
+
+type RouteType = RouteProp<RootStackParamList, "BookDetail">;
+
+export default function BookDetailScreen() {
+  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const { theme } = useTheme();
+  const { user } = useAuth();
+  const route = useRoute<RouteType>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { bookId } = route.params;
+
+  const { data: book, isLoading } = useQuery<BookDetail>({
+    queryKey: ["/api/books", bookId],
+  });
+
+  const contactMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/conversations", {
+        bookId,
+        message: `I'm interested in buying "${book?.title}"`,
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
+      navigation.navigate("Chat", { conversationId: data.id });
+    },
+  });
+
+  const handleContactAdmin = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    contactMutation.mutate();
+  };
+
+  if (isLoading || !book) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
+        <View style={[styles.loadingImage, { backgroundColor: theme.backgroundSecondary }]} />
+      </View>
+    );
+  }
+
+  const isOwnBook = user?.id === book.sellerId;
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: headerHeight + Spacing.xl, paddingBottom: 100 + insets.bottom },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styles.imageContainer, { backgroundColor: theme.backgroundSecondary }]}>
+          {book.coverImageUrl ? (
+            <Image source={{ uri: book.coverImageUrl }} style={styles.image} resizeMode="cover" />
+          ) : (
+            <View style={styles.placeholderImage}>
+              <Feather name="book" size={64} color={theme.textSecondary} />
+            </View>
+          )}
+        </View>
+
+        <View style={styles.details}>
+          <View style={styles.header}>
+            <View style={styles.titleSection}>
+              <ThemedText type="h1" style={styles.title}>
+                {book.title}
+              </ThemedText>
+              <ThemedText type="body" style={{ color: theme.textSecondary }}>
+                by {book.author}
+              </ThemedText>
+            </View>
+            <ThemedText type="h1" style={[styles.price, { color: theme.primary }]}>
+              ${book.price}
+            </ThemedText>
+          </View>
+
+          <View style={styles.badges}>
+            <ConditionBadge condition={book.condition} />
+            <View style={[styles.genreBadge, { backgroundColor: theme.backgroundSecondary }]}>
+              <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                {book.genre}
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <ThemedText type="h3" style={styles.sectionTitle}>
+              Description
+            </ThemedText>
+            <ThemedText type="body" style={{ color: theme.textSecondary }}>
+              {book.description || "No description provided."}
+            </ThemedText>
+          </View>
+
+          <View style={styles.section}>
+            <ThemedText type="h3" style={styles.sectionTitle}>
+              Seller Information
+            </ThemedText>
+            <View style={[styles.sellerCard, { backgroundColor: theme.backgroundDefault, borderColor: theme.border }]}>
+              <View style={[styles.sellerAvatar, { backgroundColor: theme.primary + "20" }]}>
+                <Feather name="user" size={20} color={theme.primary} />
+              </View>
+              <View style={styles.sellerInfo}>
+                <ThemedText type="h4">{book.sellerName}</ThemedText>
+                <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                  Listed on {new Date(book.createdAt).toLocaleDateString()}
+                </ThemedText>
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+
+      {!isOwnBook && user?.role !== "admin" ? (
+        <View
+          style={[
+            styles.footer,
+            {
+              backgroundColor: theme.backgroundRoot,
+              paddingBottom: insets.bottom + Spacing.lg,
+              borderTopColor: theme.border,
+            },
+          ]}
+        >
+          <Button
+            onPress={handleContactAdmin}
+            disabled={contactMutation.isPending}
+            style={styles.contactButton}
+          >
+            {contactMutation.isPending ? "Contacting..." : "Contact Admin to Buy"}
+          </Button>
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: Spacing.lg,
+  },
+  loadingImage: {
+    width: "100%",
+    height: 300,
+    borderRadius: BorderRadius.lg,
+    marginTop: Spacing["5xl"],
+  },
+  imageContainer: {
+    width: "100%",
+    height: 300,
+    borderRadius: BorderRadius.lg,
+    overflow: "hidden",
+    marginBottom: Spacing.xl,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  placeholderImage: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  details: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: Spacing.lg,
+  },
+  titleSection: {
+    flex: 1,
+    marginRight: Spacing.lg,
+  },
+  title: {
+    marginBottom: Spacing.xs,
+  },
+  price: {
+    fontWeight: "700",
+  },
+  badges: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+    marginBottom: Spacing.xl,
+  },
+  genreBadge: {
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.full,
+  },
+  section: {
+    marginBottom: Spacing.xl,
+  },
+  sectionTitle: {
+    marginBottom: Spacing.sm,
+  },
+  sellerCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+  },
+  sellerAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.md,
+  },
+  sellerInfo: {
+    flex: 1,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.lg,
+    borderTopWidth: 1,
+    ...Shadows.card,
+  },
+  contactButton: {
+    width: "100%",
+  },
+});
