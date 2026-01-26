@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Image, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
-import * as AuthSession from "expo-auth-session";
+import * as Google from "expo-auth-session/providers/google";
 import * as Haptics from "expo-haptics";
 import { Feather } from "@expo/vector-icons";
 
@@ -11,11 +11,8 @@ import { Button } from "@/components/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
 import { Spacing } from "@/constants/theme";
-import { getApiUrl } from "@/lib/query-client";
 
 WebBrowser.maybeCompleteAuthSession();
-
-const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "";
 
 export default function WelcomeScreen() {
   const insets = useSafeAreaInsets();
@@ -23,28 +20,30 @@ export default function WelcomeScreen() {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: "bookbazaar",
-  });
-
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: GOOGLE_CLIENT_ID,
-      scopes: ["openid", "profile", "email"],
-      redirectUri,
-    },
-    {
-      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-      tokenEndpoint: "https://oauth2.googleapis.com/token",
-    }
+  const hasGoogleConfig = !!(
+    process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ||
+    process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ||
+    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID
   );
 
-  React.useEffect(() => {
+  const [request, response, promptAsync] = Google.useAuthRequest(
+    hasGoogleConfig
+      ? {
+          webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+          iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+          androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+        }
+      : {}
+  );
+
+  useEffect(() => {
     if (response?.type === "success") {
       const { authentication } = response;
       if (authentication?.accessToken) {
         handleSignIn(authentication.accessToken);
       }
+    } else if (response?.type === "error") {
+      Alert.alert("Authentication Error", "Failed to sign in with Google. Please try again.");
     }
   }, [response]);
 
@@ -55,6 +54,7 @@ export default function WelcomeScreen() {
       await signIn(accessToken);
     } catch (error) {
       console.error("Sign in error:", error);
+      Alert.alert("Sign In Error", "Failed to sign in. Please try again.");
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     } finally {
       setIsLoading(false);
@@ -62,12 +62,24 @@ export default function WelcomeScreen() {
   }
 
   async function handleGoogleSignIn() {
-    if (Platform.OS === "web") {
-      const authUrl = `${getApiUrl()}api/auth/google/redirect`;
-      window.location.href = authUrl;
+    if (!hasGoogleConfig || !request) {
+      Alert.alert(
+        "Configuration Required",
+        "Google Sign-In is not configured. Please set up Google OAuth credentials to enable authentication.",
+        [{ text: "OK" }]
+      );
       return;
     }
-    await promptAsync();
+
+    setIsLoading(true);
+    try {
+      await promptAsync();
+    } catch (error) {
+      console.error("Google sign in error:", error);
+      Alert.alert("Error", "Failed to initiate Google Sign-In");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -89,7 +101,7 @@ export default function WelcomeScreen() {
         />
         <View style={styles.textContainer}>
           <ThemedText type="h1" style={styles.title}>
-            BookBazaar
+            Swaply
           </ThemedText>
           <ThemedText type="body" style={[styles.tagline, { color: theme.textSecondary }]}>
             Your trusted marketplace for pre-loved books
@@ -99,7 +111,7 @@ export default function WelcomeScreen() {
       <View style={styles.footer}>
         <Button
           onPress={handleGoogleSignIn}
-          disabled={isLoading || (!request && Platform.OS !== "web")}
+          disabled={isLoading}
           style={[styles.googleButton, { backgroundColor: theme.primary }]}
         >
           <View style={styles.buttonContent}>

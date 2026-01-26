@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "BookBazaar",
-    "slug": "bookbazaar",
+    "name": "Swaply",
+    "slug": "swaply",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "bookbazaar",
+    "scheme": "swaply",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bookbazaar.app"
+      "bundleIdentifier": "com.swaply.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +19,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.bookbazaar.app"
+      "package": "com.swaply.app"
     },
     "web": {
       "output": "single",

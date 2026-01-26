@@ -164,7 +164,7 @@ export default function ProfileScreen() {
       </View>
 
       <ThemedText type="small" style={[styles.version, { color: theme.textSecondary }]}>
-        BookBazaar v1.0.0
+        Swaply v1.0.0
       </ThemedText>
     </KeyboardAwareScrollViewCompat>
   );

@@ -95,7 +95,7 @@ export default function RoleSelectionScreen() {
           Choose Your Role
         </ThemedText>
         <ThemedText type="body" style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Select how you want to use BookBazaar
+          Select how you want to use Swaply
         </ThemedText>
       </View>
 

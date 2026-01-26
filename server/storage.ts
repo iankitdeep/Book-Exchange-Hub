@@ -91,7 +91,7 @@ export class MemStorage implements IStorage {
     const adminUser: User = {
       id: "admin-1",
       email: "admin@bookbazaar.com",
-      displayName: "BookBazaar Admin",
+      displayName: "Swaply Admin",
       role: "admin",
       createdAt: new Date(),
     };

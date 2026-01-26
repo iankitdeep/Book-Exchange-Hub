@@ -19,7 +19,7 @@ export default function BrowseStackNavigator() {
         name="Browse"
         component={BrowseScreen}
         options={{
-          headerTitle: () => <HeaderTitle title="BookBazaar" />,
+          headerTitle: () => <HeaderTitle title="Swaply" />,
         }}
       />
     </Stack.Navigator>
