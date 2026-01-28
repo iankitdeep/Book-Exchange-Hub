@@ -17,7 +17,7 @@ import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useQuery } from "@tanstack/react-query";
 import { mockDb, Book } from "@/lib/mock-db";
 
-import { mockDb, Book } from "@/lib/mock-db";
+
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
@@ -37,7 +37,7 @@ export default function BrowseScreen() {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
-  const { theme } = useTheme();
+
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { width } = useWindowDimensions();
 
