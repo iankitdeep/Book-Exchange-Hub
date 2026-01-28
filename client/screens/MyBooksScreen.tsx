@@ -276,7 +276,7 @@ export default function MyBooksScreen() {
     <FlatList
       data={purchases}
       renderItem={({ item }) => (
-        <PurchaseCard purchase={item} onPress={() => {}} />
+        <PurchaseCard purchase={item} onPress={() => { }} />
       )}
       keyExtractor={(item) => item.id}
       style={[styles.container, { backgroundColor: theme.backgroundRoot }]}
@@ -295,7 +295,7 @@ export default function MyBooksScreen() {
           title="No Purchases Yet"
           description="Browse our collection and find your next read"
           actionLabel="Browse Books"
-          onAction={() => navigation.navigate("Main")}
+          onAction={() => navigation.navigate("BrowseTab" as any)} // Navigate to BrowseTab
         />
       }
       refreshControl={
