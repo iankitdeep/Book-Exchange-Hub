@@ -360,7 +360,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      const conversation = await storage.getConversationById(req.params.id);
+      const conversationId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      const conversation = await storage.getConversationById(conversationId);
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found" });
       }
@@ -440,7 +441,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      const conversation = await storage.getConversationById(req.params.id);
+      const conversationId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      const conversation = await storage.getConversationById(conversationId);
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found" });
       }

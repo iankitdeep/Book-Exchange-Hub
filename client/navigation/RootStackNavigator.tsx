@@ -5,6 +5,7 @@ import WelcomeScreen from "@/screens/WelcomeScreen";
 import RoleSelectionScreen from "@/screens/RoleSelectionScreen";
 import BookDetailScreen from "@/screens/BookDetailScreen";
 import ListBookScreen from "@/screens/ListBookScreen";
+import EditProfileScreen from "@/screens/EditProfileScreen";
 import ChatScreen from "@/screens/ChatScreen";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Main: undefined;
   BookDetail: { bookId: string };
   ListBook: undefined;
+  EditProfile: undefined;
   Chat: { conversationId: string };
 };
 
@@ -75,6 +77,14 @@ export default function RootStackNavigator() {
             options={{
               headerTitle: "List a Book",
               presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfileScreen}
+            options={{
+              headerTitle: "Edit Profile",
+              presentation: "card",
             }}
           />
           <Stack.Screen
