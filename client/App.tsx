@@ -56,17 +56,6 @@ export default function App() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    width: "100%",
-    maxWidth: 600, // Optimize for web/tablet
-    alignSelf: "center",
-    backgroundColor: "#FFFFFF", // Ensure background is white
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
+    backgroundColor: "#FFFFFF",
   },
 });

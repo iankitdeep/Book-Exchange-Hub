@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl, Dimensions } from "react-native";
+import { View, FlatList, StyleSheet, RefreshControl, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -17,7 +17,7 @@ import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useQuery } from "@tanstack/react-query";
 import { mockDb, Book } from "@/lib/mock-db";
 
-const { width } = Dimensions.get("window");
+import { mockDb, Book } from "@/lib/mock-db";
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
@@ -37,7 +37,12 @@ export default function BrowseScreen() {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { width } = useWindowDimensions();
+
+  // Responsive columns
+  const numColumns = width > 1024 ? 4 : width > 768 ? 3 : 2;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
@@ -67,8 +72,8 @@ export default function BrowseScreen() {
   };
 
   const renderItem = useCallback(
-    ({ item, index }: { item: Book; index: number }) => (
-      <View style={index % 2 === 0 ? styles.leftItem : styles.rightItem}>
+    ({ item }: { item: Book }) => (
+      <View style={styles.gridItem}>
         <BookCard
           id={item.id}
           title={item.title}
@@ -125,8 +130,9 @@ export default function BrowseScreen() {
     <FlatList
       data={filteredBooks}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      numColumns={2}
+      key={numColumns} // Force re-render on column change
+      numColumns={numColumns}
+      columnWrapperStyle={styles.columnWrapper}
       style={[styles.container, { backgroundColor: theme.backgroundRoot }]}
       contentContainerStyle={[
         styles.content,
@@ -168,10 +174,11 @@ const styles = StyleSheet.create({
     marginTop: Spacing.md,
     marginHorizontal: -Spacing.lg,
   },
-  leftItem: {
-    marginRight: Spacing.lg / 2,
+  columnWrapper: {
+    gap: Spacing.lg,
   },
-  rightItem: {
-    marginLeft: Spacing.lg / 2,
+  gridItem: {
+    flex: 1,
+    maxWidth: "100%", // Prevent item overflow
   },
 });

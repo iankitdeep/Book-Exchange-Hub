@@ -2,9 +2,9 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export function useTheme() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
-  const theme = Colors[colorScheme ?? "light"];
+  const colorScheme = "light"; // Force light mode as per user request
+  const isDark = false;
+  const theme = Colors["light"];
 
   return {
     theme,

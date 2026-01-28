@@ -24,7 +24,6 @@ interface BookCardProps {
 }
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = (width - Spacing.lg * 3) / 2;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -94,7 +93,7 @@ export function BookCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: CARD_WIDTH,
+    flex: 1,
     borderRadius: BorderRadius.md,
     borderWidth: 1,
     overflow: "hidden",
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: CARD_WIDTH * 1.2,
+    aspectRatio: 1 / 1.2,
   },
   image: {
     width: "100%",
