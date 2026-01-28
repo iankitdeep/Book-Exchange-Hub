@@ -17,7 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/query-client";
+import { queryClient } from "@/lib/query-client";
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
@@ -101,7 +101,9 @@ export default function ListBookScreen() {
   const [genre, setGenre] = useState<string | null>(null);
   const [condition, setCondition] = useState<BookCondition | null>(null);
   const [price, setPrice] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [imageConfirmed, setImageConfirmed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const createBookMutation = useMutation({
@@ -114,9 +116,16 @@ export default function ListBookScreen() {
       price: string;
       coverImageUrl?: string;
       sellerId: string;
+      sellerPhoneNumber: string;
     }) => {
-      const response = await apiRequest("POST", "/api/books", bookData);
-      return response.json();
+      // MOCK API REQUEST for prototype
+      // const response = await apiRequest("POST", "/api/books", bookData);
+      // return response.json();
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({ id: "mock_book_" + Date.now(), ...bookData });
+        }, 1000);
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/books"] });
@@ -140,6 +149,7 @@ export default function ListBookScreen() {
 
     if (!result.canceled && result.assets[0]) {
       setCoverImage(result.assets[0].uri);
+      setImageConfirmed(false);
     }
   }
 
@@ -154,6 +164,10 @@ export default function ListBookScreen() {
       newErrors.price = "Price is required";
     } else if (isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
       newErrors.price = "Please enter a valid price";
+    }
+
+    if (!phoneNumber.trim()) {
+      newErrors.phoneNumber = "Phone number is required (private)";
     }
 
     setErrors(newErrors);
@@ -175,6 +189,7 @@ export default function ListBookScreen() {
       price: parseFloat(price).toFixed(2),
       coverImageUrl: coverImage || undefined,
       sellerId: user!.id,
+      sellerPhoneNumber: phoneNumber,
     });
   }
 
@@ -207,6 +222,18 @@ export default function ListBookScreen() {
           </View>
         )}
       </Pressable>
+
+      {coverImage && !imageConfirmed && (
+        <Button
+          onPress={() => {
+            setImageConfirmed(true);
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          }}
+          style={styles.confirmButton}
+        >
+          OK
+        </Button>
+      )}
 
       <InputField
         label="Book Title"
@@ -284,12 +311,21 @@ export default function ListBookScreen() {
       ) : null}
 
       <InputField
-        label="Price ($)"
+        label="Price (₹)"
         placeholder="0.00"
         value={price}
         onChangeText={setPrice}
         keyboardType="decimal-pad"
         error={errors.price}
+      />
+
+      <InputField
+        label="Contact Phone (Private)"
+        placeholder="Phone number for buyers to call/msg"
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        keyboardType="phone-pad"
+        error={errors.phoneNumber}
       />
 
       <InputField
@@ -326,8 +362,11 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     borderWidth: 2,
     borderStyle: "dashed",
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.md,
     overflow: "hidden",
+  },
+  confirmButton: {
+    marginBottom: Spacing.xl,
   },
   coverImage: {
     width: "100%",

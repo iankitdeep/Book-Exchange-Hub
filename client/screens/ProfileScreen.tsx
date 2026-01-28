@@ -39,13 +39,14 @@ function SettingsItem({ icon, label, onPress, isDestructive }: SettingsItemProps
       <View style={styles.settingsItemContent}>
         <Feather
           name={icon}
-          size={20}
+          size={24}
           color={isDestructive ? theme.error : theme.text}
         />
         <ThemedText
           style={[
             styles.settingsItemLabel,
             isDestructive && { color: theme.error },
+            { fontSize: 18, fontWeight: "500" }
           ]}
         >
           {label}

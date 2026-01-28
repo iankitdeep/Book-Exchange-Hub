@@ -43,9 +43,9 @@ export default function WelcomeScreen() {
     >
       <View style={styles.content}>
         <Image
-          source={require("../../assets/images/welcome-books.png")}
-          style={styles.illustration}
-          resizeMode="contain"
+          source={require("../../assets/images/logo_new.jpg")}
+          style={styles.logo}
+          resizeMode="cover"
         />
         <View style={styles.textContainer}>
           <ThemedText type="h1" style={styles.title}>
@@ -87,9 +87,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  illustration: {
-    width: 280,
-    height: 220,
+  logo: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     marginBottom: Spacing["3xl"],
   },
   textContainer: {

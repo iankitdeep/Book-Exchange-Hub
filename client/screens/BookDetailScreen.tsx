@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, ScrollView, Pressable } from "react-native";
+import { View, StyleSheet, Image, ScrollView, Pressable, Alert, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
@@ -30,6 +30,7 @@ interface BookDetail {
   coverImageUrl?: string;
   sellerId: string;
   sellerName: string;
+  sellerPhoneNumber?: string;
   createdAt: string;
 }
 
@@ -62,9 +63,32 @@ export default function BookDetailScreen() {
     },
   });
 
-  const handleContactAdmin = async () => {
+  const handleBuyNow = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    contactMutation.mutate();
+    Alert.alert(
+      "Contact Seller",
+      `How would you like to contact ${book.sellerName}?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Message (In-App)",
+          onPress: () => contactMutation.mutate(),
+        },
+        {
+          text: "Call",
+          onPress: () => {
+            if (book.sellerPhoneNumber) {
+              Linking.openURL(`tel:${book.sellerPhoneNumber}`);
+            } else {
+              Alert.alert("Error", "No phone number available for this seller.");
+            }
+          },
+        },
+      ]
+    );
   };
 
   if (isLoading || !book) {
@@ -75,7 +99,7 @@ export default function BookDetailScreen() {
     );
   }
 
-  const isOwnBook = user?.id === book.sellerId;
+  const isOwnBook = user?.id === book?.sellerId;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
@@ -107,7 +131,7 @@ export default function BookDetailScreen() {
               </ThemedText>
             </View>
             <ThemedText type="h1" style={[styles.price, { color: theme.primary }]}>
-              ${book.price}
+              ₹{book.price}
             </ThemedText>
           </View>
 
@@ -160,11 +184,11 @@ export default function BookDetailScreen() {
           ]}
         >
           <Button
-            onPress={handleContactAdmin}
+            onPress={handleBuyNow}
             disabled={contactMutation.isPending}
             style={styles.contactButton}
           >
-            {contactMutation.isPending ? "Contacting..." : "Contact Admin to Buy"}
+            {contactMutation.isPending ? "Connecting..." : "Buy Now"}
           </Button>
         </View>
       ) : null}

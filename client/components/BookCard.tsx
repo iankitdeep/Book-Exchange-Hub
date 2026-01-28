@@ -83,7 +83,7 @@ export function BookCard({
         </ThemedText>
         <View style={styles.footer}>
           <ThemedText type="h3" style={[styles.price, { color: theme.primary }]}>
-            ${price}
+            ₹{price}
           </ThemedText>
           <ConditionBadge condition={condition} />
         </View>
