@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, ScrollView, Pressable, Alert, Linking } from "react-native";
+import { View, StyleSheet, Image, ScrollView, Pressable, Alert, Linking, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
