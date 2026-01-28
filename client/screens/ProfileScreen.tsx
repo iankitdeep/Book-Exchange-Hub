@@ -120,11 +120,7 @@ export default function ProfileScreen() {
             {user.phoneNumber}
           </ThemedText>
         ) : null}
-        {user?.role ? (
-          <View style={styles.roleContainer}>
-            <RoleBadge role={user.role} />
-          </View>
-        ) : null}
+
       </View>
 
       <View style={styles.section}>

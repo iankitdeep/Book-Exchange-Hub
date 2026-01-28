@@ -15,20 +15,13 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useQuery } from "@tanstack/react-query";
+import { mockDb, Book } from "@/lib/mock-db";
 
 const { width } = Dimensions.get("window");
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  price: string;
-  condition: BookCondition;
-  coverImageUrl?: string;
-  genre: string;
-}
+
 
 const genres = [
   { id: "fiction", label: "Fiction" },
@@ -52,6 +45,7 @@ export default function BrowseScreen() {
 
   const { data: books = [], isLoading, refetch } = useQuery<Book[]>({
     queryKey: ["/api/books"],
+    queryFn: mockDb.getBooks,
   });
 
   const filteredBooks = books.filter((book) => {

@@ -16,6 +16,7 @@ import { BorderRadius, Spacing, Shadows } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/query-client";
+import { mockDb } from "@/lib/mock-db";
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
@@ -45,8 +46,9 @@ export default function BookDetailScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { bookId } = route.params;
 
-  const { data: book, isLoading } = useQuery<BookDetail>({
+  const { data: book, isLoading } = useQuery({
     queryKey: ["/api/books", bookId],
+    queryFn: () => mockDb.getBookById(bookId),
   });
 
   const contactMutation = useMutation({

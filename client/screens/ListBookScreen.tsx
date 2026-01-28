@@ -18,8 +18,9 @@ import { BorderRadius, Spacing } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
+import { mockDb } from "@/lib/mock-db";
 
-type BookCondition = "like_new" | "good" | "fair" | "poor";
+export type BookCondition = "like_new" | "good" | "fair" | "poor";
 
 const conditions: { id: BookCondition; label: string }[] = [
   { id: "like_new", label: "Like New" },
@@ -118,19 +119,17 @@ export default function ListBookScreen() {
       sellerId: string;
       sellerPhoneNumber: string;
     }) => {
-      // MOCK API REQUEST for prototype
-      // const response = await apiRequest("POST", "/api/books", bookData);
-      // return response.json();
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ id: "mock_book_" + Date.now(), ...bookData });
-        }, 1000);
+      return await mockDb.addBook({
+        ...bookData,
+        condition: bookData.condition as BookCondition, // Explicit cast
+        sellerName: user?.displayName || "User",
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/books"] });
       queryClient.invalidateQueries({ queryKey: ["/api/books/my-listings"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Alert.alert("Success", "Book Posted Successfully!");
       navigation.goBack();
     },
     onError: (error) => {
