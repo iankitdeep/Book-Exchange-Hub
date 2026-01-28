@@ -306,6 +306,23 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     ...Shadows.card,
   },
+  bottomBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    padding: Spacing.lg,
+    borderTopWidth: 1,
+    ...Shadows.card,
+    gap: Spacing.md,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   contactButton: {
     width: "100%",
   },
