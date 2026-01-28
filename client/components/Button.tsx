@@ -16,6 +16,7 @@ interface ButtonProps {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
+  variant?: "primary" | "secondary" | "outline" | "ghost";
 }
 
 const springConfig: WithSpringConfig = {
@@ -33,6 +34,7 @@ export function Button({
   children,
   style,
   disabled = false,
+  variant = "primary",
 }: ButtonProps) {
   const { theme } = useTheme();
   const scale = useSharedValue(1);
@@ -53,6 +55,46 @@ export function Button({
     }
   };
 
+  const getBackgroundColor = () => {
+    if (disabled) return theme.tabIconDefault; // Grayed out
+    switch (variant) {
+      case "primary":
+        return theme.primary;
+      case "secondary":
+        return theme.backgroundSecondary;
+      case "outline":
+      case "ghost":
+        return "transparent";
+      default:
+        return theme.primary;
+    }
+  };
+
+  const getTextColor = () => {
+    if (disabled) return "#FFFFFF";
+    switch (variant) {
+      case "primary":
+        return "#FFFFFF";
+      case "secondary":
+        return theme.text;
+      case "outline":
+      case "ghost":
+        return theme.primary;
+      default:
+        return "#FFFFFF";
+    }
+  };
+
+  const getBorder = () => {
+    if (variant === "outline") {
+      return {
+        borderWidth: 1,
+        borderColor: disabled ? theme.tabIconDefault : theme.primary,
+      };
+    }
+    return {};
+  };
+
   return (
     <AnimatedPressable
       onPress={disabled ? undefined : onPress}
@@ -62,16 +104,17 @@ export function Button({
       style={[
         styles.button,
         {
-          backgroundColor: theme.link,
-          opacity: disabled ? 0.5 : 1,
+          backgroundColor: getBackgroundColor(),
+          opacity: disabled && variant !== "primary" ? 0.5 : 1,
         },
+        getBorder(),
         style,
         animatedStyle,
       ]}
     >
       <ThemedText
         type="body"
-        style={[styles.buttonText, { color: theme.buttonText }]}
+        style={[styles.buttonText, { color: getTextColor() }]}
       >
         {children}
       </ThemedText>
@@ -85,6 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: Spacing.lg,
   },
   buttonText: {
     fontWeight: "600",

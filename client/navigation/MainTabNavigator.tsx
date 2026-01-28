@@ -8,6 +8,7 @@ import MyBooksStackNavigator from "@/navigation/MyBooksStackNavigator";
 import MessagesStackNavigator from "@/navigation/MessagesStackNavigator";
 import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import AdminStackNavigator from "@/navigation/AdminStackNavigator";
+import CartScreen from "@/screens/CartScreen";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -17,6 +18,7 @@ export type MainTabParamList = {
   MessagesTab: undefined;
   ProfileTab: undefined;
   AdminTab: undefined;
+  CartTab: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -97,6 +99,16 @@ export default function MainTabNavigator() {
           }}
         />
       )}
+      <Tab.Screen
+        name="CartTab"
+        component={CartScreen}
+        options={{
+          title: "Cart",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="shopping-cart" size={size} color={color} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="ProfileTab"
         component={ProfileStackNavigator}

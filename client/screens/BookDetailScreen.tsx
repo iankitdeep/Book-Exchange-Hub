@@ -35,6 +35,8 @@ interface BookDetail {
   createdAt: string;
 }
 
+const { width } = Dimensions.get("window");
+
 type RouteType = RouteProp<RootStackParamList, "BookDetail">;
 
 export default function BookDetailScreen() {
@@ -108,7 +110,7 @@ export default function BookDetailScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.content,
-          { paddingTop: headerHeight + Spacing.xl, paddingBottom: 100 + insets.bottom },
+          { paddingTop: headerHeight + Spacing.xl, paddingBottom: 120 + insets.bottom },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -174,23 +176,35 @@ export default function BookDetailScreen() {
         </View>
       </ScrollView>
 
+      {/* Persistent Bottom Bar */}
       {!isOwnBook && user?.role !== "admin" ? (
-        <View
-          style={[
-            styles.footer,
-            {
-              backgroundColor: theme.backgroundRoot,
-              paddingBottom: insets.bottom + Spacing.lg,
-              borderTopColor: theme.border,
-            },
-          ]}
-        >
+        <View style={[styles.bottomBar, { backgroundColor: theme.backgroundRoot, borderTopColor: theme.border, paddingBottom: insets.bottom + Spacing.lg }]}>
           <Button
-            onPress={handleBuyNow}
-            disabled={contactMutation.isPending}
-            style={styles.contactButton}
+            variant="outline"
+            style={styles.actionButton}
+            onPress={() => {
+              Alert.alert("Message", "Open chat with seller?", [
+                { text: "Cancel", style: "cancel" },
+                { text: "Open Chat", onPress: () => contactMutation.mutate() }
+              ]);
+            }}
           >
-            {contactMutation.isPending ? "Connecting..." : "Buy Now"}
+            <Feather name="message-square" size={20} color={theme.text} style={{ marginRight: 8 }} />
+            Message
+          </Button>
+          <Button
+            variant="primary"
+            style={styles.actionButton}
+            onPress={() => {
+              if (book.sellerPhoneNumber) {
+                Linking.openURL(`tel:${book.sellerPhoneNumber}`);
+              } else {
+                Alert.alert("Error", "No phone number available.");
+              }
+            }}
+          >
+            <Feather name="phone" size={20} color={theme.buttonText} style={{ marginRight: 8 }} />
+            Call
           </Button>
         </View>
       ) : null}
@@ -204,6 +218,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: Spacing.lg,
+    paddingBottom: 120, // Add padding for bottom bar
   },
   loadingImage: {
     width: "100%",
@@ -220,7 +235,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "100%",
+    height: width * 1.2, // Clean aspect ratio
+    maxHeight: 500,
   },
   placeholderImage: {
     flex: 1,

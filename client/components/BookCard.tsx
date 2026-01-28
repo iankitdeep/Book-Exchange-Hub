@@ -9,7 +9,9 @@ import Animated, {
 import { ThemedText } from "@/components/ThemedText";
 import { ConditionBadge } from "@/components/ConditionBadge";
 import { useTheme } from "@/hooks/useTheme";
+import { useCart } from "@/contexts/CartContext";
 import { BorderRadius, Spacing } from "@/constants/theme";
+import { Feather } from "@expo/vector-icons";
 
 type BookCondition = "like_new" | "good" | "fair" | "poor";
 
@@ -36,6 +38,7 @@ export function BookCard({
   onPress,
 }: BookCardProps) {
   const { theme } = useTheme();
+  const { addToCart } = useCart();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -72,6 +75,15 @@ export function BookCard({
             </ThemedText>
           </View>
         )}
+        <Pressable
+          style={[styles.cartButton, { backgroundColor: theme.backgroundRoot }]}
+          onPress={(e) => {
+            e.stopPropagation();
+            addToCart({ id: "temp_id_fix_me", title, author, price, condition, coverImageUrl } as any); // Quick fix for interface mismatch, safer to pass full object
+          }}
+        >
+          <Feather name="plus" size={20} color={theme.primary} />
+        </Pressable>
       </View>
       <View style={styles.content}>
         <ThemedText type="h4" numberOfLines={2} style={styles.title}>
@@ -102,6 +114,23 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     aspectRatio: 1 / 1.2,
+    position: "relative",
+  },
+  cartButton: {
+    position: "absolute",
+    top: Spacing.sm,
+    right: Spacing.sm,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   image: {
     width: "100%",

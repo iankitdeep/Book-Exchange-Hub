@@ -2,32 +2,34 @@ import { Platform } from "react-native";
 
 export const Colors = {
   light: {
-    text: "#1A1A1A",
-    textSecondary: "#8E8E93",
+    text: "#1A1A1A", // Dark text for contrast
+    textSecondary: "#666666",
     buttonText: "#FFFFFF",
-    tabIconDefault: "#C7C7CC",
-    tabIconSelected: "#007AFF",
-    link: "#007AFF",
-    primary: "#007AFF", // Bright Blue
-    primaryLight: "#5AC8FA",
-    accent: "#FFCC00", // Yellow
+    tabIconDefault: "#CCCCCC",
+    tabIconSelected: "#FF7F50", // Orange
+    link: "#FF7F50",
+    primary: "#FF7F50", // KLEOP Orange
+    primaryLight: "#FFAB88",
+    accent: "#FF7F50",
     success: "#34C759",
     error: "#FF3B30",
-    border: "#E5E5EA",
+    border: "#F0F0F0",
     backgroundRoot: "#FFFFFF",
     backgroundDefault: "#FFFFFF",
-    backgroundSecondary: "#F2F2F7",
-    backgroundTertiary: "#E5E5EA",
+    backgroundSecondary: "#F9F9F9", // Very light gray for cards/sections
+    backgroundTertiary: "#F0F0F0",
   },
   dark: {
+    // Keeping dark mode same structure but essentially light due to force-light in useTheme, 
+    // but updating values just in case.
     text: "#FFFFFF",
     textSecondary: "#8E8E93",
     buttonText: "#FFFFFF",
     tabIconDefault: "#8E8E93",
-    tabIconSelected: "#0A84FF",
-    link: "#0A84FF",
-    primary: "#0A84FF",
-    primaryLight: "#64D2FF",
+    tabIconSelected: "#FF7F50",
+    link: "#FF7F50",
+    primary: "#FF7F50",
+    primaryLight: "#FFAB88",
     accent: "#FFD60A",
     success: "#30D158",
     error: "#FF453A",
