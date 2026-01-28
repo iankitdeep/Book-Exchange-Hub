@@ -95,7 +95,7 @@ export default function BrowseScreen() {
         {width <= 768 && (
           <Animated.View entering={FadeInLeft.duration(600)}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: Spacing.sm, marginBottom: Spacing.md }}>
-              <Image
+              <RNImage
                 source={require("../../assets/images/app-logo.jpg")}
                 style={{ width: 36, height: 36, borderRadius: 8 }}
                 resizeMode="contain"
