@@ -27,10 +27,14 @@ export function WebSidebar() {
 
         return (
             <Pressable
-                onPress={() => navigation.navigate(route)}
-                style={[
+                onPress={() => {
+                    // Navigate to the tab. Since we are in Main, bubbling *should* work, 
+                    // but targeting the specific screen ensures it switches.
+                    navigation.navigate(route as any);
+                }}
+                style={({ pressed }) => [
                     styles.menuItem,
-                    isActive && { backgroundColor: theme.primary + "20" }
+                    (isActive || pressed) && { backgroundColor: theme.primary + "20" }
                 ]}
             >
                 <Feather name={icon} size={24} color={isActive ? theme.primary : theme.textSecondary} />

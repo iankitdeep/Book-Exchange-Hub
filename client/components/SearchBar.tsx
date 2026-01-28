@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { useTheme } from "@/hooks/useTheme";
-import { BorderRadius, Spacing } from "@/constants/theme";
+import { BorderRadius, Spacing, Shadows } from "@/constants/theme";
 
 interface SearchBarProps {
   value: string;
@@ -68,7 +68,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: Spacing.inputHeight,
     borderRadius: BorderRadius.md,
-    borderWidth: 1,
+    borderRadius: BorderRadius.md,
+    backgroundColor: "#FFFFFF",
+    ...Shadows.sm, // Add shadow
     paddingHorizontal: Spacing.md,
   },
   icon: {

@@ -95,6 +95,8 @@ export default function BookDetailScreen() {
     );
   };
 
+  const isDesktop = width > 768;
+
   if (isLoading || !book) {
     return (
       <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
@@ -104,6 +106,114 @@ export default function BookDetailScreen() {
   }
 
   const isOwnBook = user?.id === book?.sellerId;
+
+  if (isDesktop) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.backgroundRoot, flexDirection: "row" }]}>
+        {/* Left Panel: Image */}
+        <View style={{ flex: 1, padding: Spacing.xl, maxWidth: 500, justifyContent: "center" }}>
+          <View style={[styles.imageContainer, { height: 600, backgroundColor: theme.backgroundSecondary }]}>
+            {book.coverImageUrl ? (
+              <Image source={{ uri: book.coverImageUrl }} style={[styles.image, { height: "100%" }]} resizeMode="contain" />
+            ) : (
+              <View style={styles.placeholderImage}>
+                <Feather name="book" size={64} color={theme.textSecondary} />
+              </View>
+            )}
+          </View>
+        </View>
+
+        {/* Right Panel: Details */}
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: Spacing.xl, paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <View style={styles.titleSection}>
+              <ThemedText type="h1" style={[styles.title, { fontSize: 32 }]}>
+                {book.title}
+              </ThemedText>
+              <ThemedText type="h3" style={{ color: theme.textSecondary }}>
+                by {book.author}
+              </ThemedText>
+            </View>
+            <ThemedText type="h1" style={[styles.price, { color: theme.primary, fontSize: 32 }]}>
+              ₹{book.price}
+            </ThemedText>
+          </View>
+
+          <View style={styles.badges}>
+            <ConditionBadge condition={book.condition} />
+            <View style={[styles.genreBadge, { backgroundColor: theme.backgroundSecondary }]}>
+              <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                {book.genre}
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <ThemedText type="h3" style={styles.sectionTitle}>
+              Description
+            </ThemedText>
+            <ThemedText type="body" style={{ color: theme.textSecondary, lineHeight: 28 }}>
+              {book.description || "No description provided."}
+            </ThemedText>
+          </View>
+
+          <View style={styles.section}>
+            <ThemedText type="h3" style={styles.sectionTitle}>
+              Seller Information
+            </ThemedText>
+            <View style={[styles.sellerCard, { backgroundColor: theme.backgroundDefault, borderColor: theme.border }]}>
+              <View style={[styles.sellerAvatar, { backgroundColor: theme.primary + "20" }]}>
+                <Feather name="user" size={24} color={theme.primary} />
+              </View>
+              <View style={styles.sellerInfo}>
+                <ThemedText type="h4">{book.sellerName}</ThemedText>
+                <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                  Listed on {new Date(book.createdAt).toLocaleDateString()}
+                </ThemedText>
+              </View>
+            </View>
+          </View>
+
+          {/* Desktop Buttons inline */}
+          {!isOwnBook && user?.role !== "admin" ? (
+            <View style={{ flexDirection: "row", gap: Spacing.md, marginTop: Spacing.xl }}>
+              <Button
+                variant="outline"
+                style={{ flex: 1 }}
+                onPress={() => {
+                  Alert.alert("Message", "Open chat with seller?", [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Open Chat", onPress: () => contactMutation.mutate() }
+                  ]);
+                }}
+              >
+                <Feather name="message-square" size={20} color={theme.text} style={{ marginRight: 8 }} />
+                Message
+              </Button>
+              <Button
+                variant="primary"
+                style={{ flex: 1 }}
+                onPress={() => {
+                  if (book.sellerPhoneNumber) {
+                    Linking.openURL(`tel:${book.sellerPhoneNumber}`);
+                  } else {
+                    Alert.alert("Error", "No phone number available.");
+                  }
+                }}
+              >
+                <Feather name="phone" size={20} color={theme.buttonText} style={{ marginRight: 8 }} />
+                Call
+              </Button>
+            </View>
+          ) : null}
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
