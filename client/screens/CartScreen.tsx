@@ -46,7 +46,7 @@ export default function CartScreen() {
                     title="Your Cart is Empty"
                     description="Browse books and add them to your cart!"
                     actionLabel="Browse Books"
-                    onAction={() => navigation.navigate("Main")}
+                    onAction={() => navigation.navigate("Main", { screen: "BrowseTab" } as any)}
                 />
             </View>
         );
