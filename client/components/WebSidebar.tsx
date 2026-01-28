@@ -70,7 +70,7 @@ export function WebSidebar() {
         <View style={[styles.sidebar, { backgroundColor: theme.backgroundRoot, borderRightColor: theme.border, paddingTop: insets.top + Spacing.xl }]}>
             <View style={styles.logoContainer}>
                 <RNImage
-                    source={require("@/assets/images/app-logo.jpg")}
+                    source={require("../assets/images/app-logo.jpg")}
                     style={{ width: 40, height: 40, borderRadius: 8 }}
                     resizeMode="contain"
                 />
