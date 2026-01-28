@@ -92,11 +92,13 @@ export default function BrowseScreen() {
   const ListHeaderComponent = useCallback(
     () => (
       <View style={styles.header}>
-        <Animated.View entering={FadeInLeft.duration(600)}>
-          <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md }]}>
-            Swaply
-          </ThemedText>
-        </Animated.View>
+        {width <= 768 && (
+          <Animated.View entering={FadeInLeft.duration(600)}>
+            <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md }]}>
+              Swaply
+            </ThemedText>
+          </Animated.View>
+        )}
         <Animated.View entering={FadeInLeft.delay(100).duration(600)}>
           <ThemedText type="h2" style={styles.sectionTitle}>
             A Library That's Always Open.
@@ -126,7 +128,7 @@ export default function BrowseScreen() {
         </Animated.View>
       </View>
     ),
-    [searchQuery, selectedGenre, theme]
+    [searchQuery, selectedGenre, theme, width]
   );
 
   const ListEmptyComponent = useCallback(
