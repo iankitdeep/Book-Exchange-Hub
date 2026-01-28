@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, useNavigationState } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { ThemedText } from "./ThemedText";
 import { useTheme } from "@/hooks/useTheme";
