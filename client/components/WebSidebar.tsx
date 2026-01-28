@@ -14,16 +14,30 @@ export function WebSidebar() {
     const navigation = useNavigation<any>();
     const { user } = useAuth();
 
-    // Safe check for current route might be complex outside of navigator, 
-    // but we can just use navigation state or simple buttons.
-    // For simplicity, we just navigate.
+    // Get the current route name from the navigation state to highlight active tab
+    const currentRouteName = useNavigationState(state => {
+        if (!state) return undefined;
+        // We need to find the "Main" route in the root stack
+        const mainRoute = state.routes.find(r => r.name === "Main");
+
+        if (mainRoute?.state) {
+            // If Main has state (it's a navigator that has been initialized)
+            const activeIndex = mainRoute.state.index;
+            return mainRoute.state.routes[activeIndex || 0].name;
+        }
+
+        // If we really are just on Main but state isn't populated yet, 
+        // it means we are at the initial screen of Main, which is BrowseTab.
+        if (mainRoute) return "BrowseTab";
+
+        return undefined;
+    });
 
     const isAdmin = user?.role === "admin";
     const isSeller = user?.role === "seller";
 
     const MenuItem = ({ label, icon, route }: { label: string; icon: any; route: string }) => {
-        // We would need navigation state to highlight active, but let's keep it simple for now
-        const isActive = false;
+        const isActive = currentRouteName === route;
 
         return (
             <Pressable
@@ -40,7 +54,10 @@ export function WebSidebar() {
                 <ThemedText
                     style={[
                         styles.menuLabel,
-                        { color: isActive ? theme.primary : theme.textSecondary }
+                        {
+                            color: isActive ? theme.primary : theme.textSecondary,
+                            fontWeight: isActive ? "bold" : "600"
+                        }
                     ]}
                 >
                     {label}
