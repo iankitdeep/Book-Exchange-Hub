@@ -95,7 +95,7 @@ export default function BrowseScreen() {
       <View style={styles.header}>
         {width <= 768 && (
           <Animated.View entering={FadeInLeft.duration(600)}>
-            <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md, color: theme.primary, fontFamily: "Quicksand_700Bold" }]}>
+            <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md, color: theme.primary }]}>
               Swaply
             </ThemedText>
           </Animated.View>

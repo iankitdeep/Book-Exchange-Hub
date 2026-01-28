@@ -69,7 +69,7 @@ export function WebSidebar() {
     return (
         <View style={[styles.sidebar, { backgroundColor: theme.backgroundRoot, borderRightColor: theme.border, paddingTop: insets.top + Spacing.xl }]}>
             <View style={styles.logoContainer}>
-                <ThemedText type="h1" style={{ color: theme.primary, fontFamily: "Quicksand_700Bold", fontSize: 32 }}>Swaply</ThemedText>
+                <ThemedText type="h1" style={{ color: theme.primary }}>Swaply</ThemedText>
             </View>
             <View style={styles.menu}>
                 <MenuItem label="Browse" icon="search" route="BrowseTab" />
