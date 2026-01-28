@@ -20,7 +20,8 @@ export default function WelcomeScreen() {
     setIsLoading(true);
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await signIn();
+      // @ts-ignore - Mock token for prototype
+      await signIn("mock_token_for_prototype");
     } catch (error) {
       console.error("Sign in error:", error);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

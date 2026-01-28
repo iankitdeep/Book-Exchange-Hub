@@ -18,10 +18,11 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  signIn: () => Promise<void>;
+  signIn: (token?: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateRole: (role: UserRole) => Promise<void>;
   updateProfile: (data: { displayName?: string; phoneNumber?: string; email?: string }) => Promise<void>;
+  updateUser: (data: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -75,8 +76,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function signIn() {
+  async function signIn(token?: string) {
     try {
+      if (token === "mock_token_for_prototype") {
+        const mockUser: User = {
+          id: "mock_user_" + Date.now(),
+          email: "user@example.com",
+          displayName: "Demo User",
+          phoneNumber: "",
+          role: "buyer",
+        };
+        await setStoredToken(token);
+        setUser(mockUser);
+        return;
+      }
+
       const response = await apiRequest("POST", "/api/auth/anonymous");
       const data = await response.json();
       await setStoredToken(data.token);
@@ -111,6 +125,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function updateUser(data: Partial<User>) {
+    // In production, call API: PUT /api/auth/profile
+    if (user) {
+      setUser({ ...user, ...data });
+    }
+  }
+
   async function refreshUser() {
     try {
       const response = await apiRequest("GET", "/api/auth/me");
@@ -131,6 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signOut,
         updateRole,
         updateProfile,
+        updateUser,
         refreshUser,
       }}
     >

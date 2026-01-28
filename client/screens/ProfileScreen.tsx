@@ -132,7 +132,7 @@ export default function ProfileScreen() {
         </ThemedText>
         <View style={[styles.settingsGroup, { backgroundColor: theme.backgroundDefault, borderColor: theme.border }]}>
           <SettingsItem
-            icon="user"
+            icon="edit-3"
             label="Edit Profile"
             onPress={handleEditProfile}
           />
@@ -146,13 +146,13 @@ export default function ProfileScreen() {
           <SettingsItem
             icon="bell"
             label="Notifications"
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
           <SettingsItem
             icon="help-circle"
             label="Help & Support"
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
       </View>
