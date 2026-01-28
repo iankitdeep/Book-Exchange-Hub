@@ -37,7 +37,7 @@ export default function MainTabNavigator() {
     <View style={{ flex: 1, flexDirection: "row" }}>
       {isDesktop && <WebSidebar />}
       <View style={{ flex: 1, maxWidth: isDesktop ? "100%" : undefined }}>
-        {/* On Desktop, we might want to center the content or limit max width, 
+        {/* On Desktop, we might want to center the content or limit max width,
             but for now let it stretch with the sidebar next to it. */}
         <Tab.Navigator
           initialRouteName="BrowseTab"
@@ -131,123 +131,5 @@ export default function MainTabNavigator() {
         </Tab.Navigator>
       </View>
     </View>
-  );
-}
-import MyBooksStackNavigator from "@/navigation/MyBooksStackNavigator";
-import MessagesStackNavigator from "@/navigation/MessagesStackNavigator";
-import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
-import AdminStackNavigator from "@/navigation/AdminStackNavigator";
-import CartScreen from "@/screens/CartScreen";
-import { useTheme } from "@/hooks/useTheme";
-import { useAuth } from "@/contexts/AuthContext";
-
-export type MainTabParamList = {
-  BrowseTab: undefined;
-  MyBooksTab: undefined;
-  MessagesTab: undefined;
-  ProfileTab: undefined;
-  AdminTab: undefined;
-  CartTab: undefined;
-};
-
-const Tab = createBottomTabNavigator<MainTabParamList>();
-
-export default function MainTabNavigator() {
-  const { theme, isDark } = useTheme();
-  const { user } = useAuth();
-
-  const isAdmin = user?.role === "admin";
-  const isSeller = user?.role === "seller";
-
-  return (
-    <Tab.Navigator
-      initialRouteName="BrowseTab"
-      screenOptions={{
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.tabIconDefault,
-        tabBarStyle: {
-          position: "absolute",
-          backgroundColor: Platform.select({
-            ios: "transparent",
-            android: theme.backgroundRoot,
-          }),
-          borderTopWidth: 0,
-          elevation: 0,
-        },
-        tabBarBackground: () =>
-          Platform.OS === "ios" ? (
-            <BlurView
-              intensity={100}
-              tint={isDark ? "dark" : "light"}
-              style={StyleSheet.absoluteFill}
-            />
-          ) : null,
-        headerShown: false,
-      }}
-    >
-      <Tab.Screen
-        name="BrowseTab"
-        component={BrowseStackNavigator}
-        options={{
-          title: "Browse",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="search" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="MyBooksTab"
-        component={MyBooksStackNavigator}
-        options={{
-          title: isSeller || isAdmin ? "My Listings" : "My Purchases",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="book" size={size} color={color} />
-          ),
-        }}
-      />
-      {isAdmin ? (
-        <Tab.Screen
-          name="AdminTab"
-          component={AdminStackNavigator}
-          options={{
-            title: "Dashboard",
-            tabBarIcon: ({ color, size }) => (
-              <Feather name="grid" size={size} color={color} />
-            ),
-          }}
-        />
-      ) : (
-        <Tab.Screen
-          name="MessagesTab"
-          component={MessagesStackNavigator}
-          options={{
-            title: "Messages",
-            tabBarIcon: ({ color, size }) => (
-              <Feather name="message-square" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
-      <Tab.Screen
-        name="CartTab"
-        component={CartScreen}
-        options={{
-          title: "Cart",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="shopping-cart" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="ProfileTab"
-        component={ProfileStackNavigator}
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="user" size={size} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
   );
 }
