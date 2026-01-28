@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl, useWindowDimensions } from "react-native";
+import { View, FlatList, StyleSheet, RefreshControl, useWindowDimensions, Image as RNImage } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -94,9 +94,16 @@ export default function BrowseScreen() {
       <View style={styles.header}>
         {width <= 768 && (
           <Animated.View entering={FadeInLeft.duration(600)}>
-            <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md }]}>
-              Swaply
-            </ThemedText>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: Spacing.sm, marginBottom: Spacing.md }}>
+              <Image
+                source={require("../../assets/images/app-logo.jpg")}
+                style={{ width: 36, height: 36, borderRadius: 8 }}
+                resizeMode="contain"
+              />
+              <ThemedText type="h1" style={[styles.appTitle, { marginBottom: 0, color: theme.primary }]}>
+                Swaply
+              </ThemedText>
+            </View>
           </Animated.View>
         )}
         <Animated.View entering={FadeInLeft.delay(100).duration(600)}>
@@ -123,7 +130,7 @@ export default function BrowseScreen() {
 
         <Animated.View entering={FadeInLeft.delay(200).duration(600)} style={{ marginTop: Spacing.xl }}>
           <ThemedText type="h2" style={styles.sectionTitle}>
-            Nouveautés
+            New Arrivals
           </ThemedText>
         </Animated.View>
       </View>

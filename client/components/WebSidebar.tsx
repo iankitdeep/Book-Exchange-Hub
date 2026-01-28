@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Image as RNImage } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, useNavigationState } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
@@ -69,7 +69,14 @@ export function WebSidebar() {
     return (
         <View style={[styles.sidebar, { backgroundColor: theme.backgroundRoot, borderRightColor: theme.border, paddingTop: insets.top + Spacing.xl }]}>
             <View style={styles.logoContainer}>
-                <ThemedText type="h1" style={{ color: theme.primary }}>Swaply</ThemedText>
+                <Image
+                    source={require("@/assets/images/app-logo.jpg")}
+                    style={{ width: 40, height: 40, borderRadius: 8 }}
+                    resizeMode="contain"
+                />
+                <ThemedText type="h1" style={{ color: theme.primary, fontWeight: "900", fontSize: 28, fontFamily: "System" }}>
+                    Swaply
+                </ThemedText>
             </View>
 
             <View style={styles.menu}>
@@ -98,6 +105,9 @@ const styles = StyleSheet.create({
     logoContainer: {
         marginBottom: Spacing["4xl"],
         paddingLeft: Spacing.sm,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: Spacing.md,
     },
     menu: {
         gap: Spacing.xl,
