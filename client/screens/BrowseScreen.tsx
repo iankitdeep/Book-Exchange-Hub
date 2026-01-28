@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl, useWindowDimensions, Image as RNImage } from "react-native";
+import { View, FlatList, StyleSheet, RefreshControl, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Animated, { FadeInLeft, FadeInDown } from "react-native-reanimated";
-import { Feather } from "@expo/vector-icons";
+
 
 import { BookCard } from "@/components/BookCard";
 import { SearchBar } from "@/components/SearchBar";
@@ -95,19 +95,9 @@ export default function BrowseScreen() {
       <View style={styles.header}>
         {width <= 768 && (
           <Animated.View entering={FadeInLeft.duration(600)}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: Spacing.sm, marginBottom: Spacing.md }}>
-              {/* <RNImage
-                source={require("../../assets/images/app-logo.jpg")}
-                style={{ width: 36, height: 36, borderRadius: 8 }}
-                resizeMode="contain"
-              /> */}
-              <View style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: theme.primary, alignItems: "center", justifyContent: "center" }}>
-                <Feather name="book-open" size={20} color="#FFF" />
-              </View>
-              <ThemedText type="h1" style={[styles.appTitle, { marginBottom: 0, color: theme.primary }]}>
-                Swaply
-              </ThemedText>
-            </View>
+            <ThemedText type="h1" style={[styles.appTitle, { marginBottom: Spacing.md }]}>
+              Swaply
+            </ThemedText>
           </Animated.View>
         )}
         <Animated.View entering={FadeInLeft.delay(100).duration(600)}>
