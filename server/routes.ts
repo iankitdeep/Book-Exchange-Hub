@@ -107,6 +107,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(user);
   });
 
+  app.post("/api/auth/anonymous", async (req, res) => {
+    try {
+      const user = await storage.createUser({
+        displayName: "New User",
+        role: "buyer",
+      });
+
+      const jwtToken = generateToken(user);
+      res.json({ user, token: jwtToken });
+    } catch (error) {
+      console.error("Anonymous auth error:", error);
+      res.status(500).json({ error: "Authentication failed" });
+    }
+  });
+
   app.put("/api/auth/role", async (req: AuthRequest, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith("Bearer ")) {
@@ -126,6 +141,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const user = await storage.updateUserRole(decoded.userId, role);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  });
+
+  app.put("/api/auth/profile", async (req: AuthRequest, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    const { displayName, phoneNumber, email } = req.body as { displayName?: string; phoneNumber?: string; email?: string };
+
+    const user = await storage.updateUserProfile(decoded.userId, { displayName, phoneNumber, email });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

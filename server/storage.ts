@@ -6,8 +6,9 @@ export type BookStatus = "active" | "pending" | "sold";
 
 export interface User {
   id: string;
-  email: string;
+  email?: string;
   displayName: string;
+  phoneNumber?: string;
   avatarUrl?: string;
   role: UserRole;
   googleId?: string;
@@ -54,6 +55,7 @@ export interface IStorage {
   getUserByGoogleId(googleId: string): Promise<User | undefined>;
   createUser(user: Omit<User, "id" | "createdAt">): Promise<User>;
   updateUserRole(userId: string, role: UserRole): Promise<User | undefined>;
+  updateUserProfile(userId: string, data: { displayName?: string; phoneNumber?: string; email?: string }): Promise<User | undefined>;
   
   getBooks(): Promise<Book[]>;
   getBookById(id: string): Promise<Book | undefined>;
@@ -198,6 +200,16 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return undefined;
     user.role = role;
+    this.users.set(userId, user);
+    return user;
+  }
+
+  async updateUserProfile(userId: string, data: { displayName?: string; phoneNumber?: string; email?: string }): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    if (data.displayName) user.displayName = data.displayName;
+    if (data.phoneNumber !== undefined) user.phoneNumber = data.phoneNumber;
+    if (data.email !== undefined) user.email = data.email;
     this.users.set(userId, user);
     return user;
   }

@@ -7,8 +7,9 @@ export type UserRole = "buyer" | "seller" | "admin";
 
 export interface User {
   id: string;
-  email: string;
+  email?: string;
   displayName: string;
+  phoneNumber?: string;
   avatarUrl?: string;
   role: UserRole;
 }
@@ -17,9 +18,10 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  signIn: (googleToken: string) => Promise<void>;
+  signIn: () => Promise<void>;
   signOut: () => Promise<void>;
   updateRole: (role: UserRole) => Promise<void>;
+  updateProfile: (data: { displayName?: string; phoneNumber?: string; email?: string }) => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -73,9 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function signIn(googleToken: string) {
+  async function signIn() {
     try {
-      const response = await apiRequest("POST", "/api/auth/google", { token: googleToken });
+      const response = await apiRequest("POST", "/api/auth/anonymous");
       const data = await response.json();
       await setStoredToken(data.token);
       setUser(data.user);
@@ -92,6 +94,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function updateRole(role: UserRole) {
     try {
       const response = await apiRequest("PUT", "/api/auth/role", { role });
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function updateProfile(data: { displayName?: string; phoneNumber?: string; email?: string }) {
+    try {
+      const response = await apiRequest("PUT", "/api/auth/profile", data);
       const updatedUser = await response.json();
       setUser(updatedUser);
     } catch (error) {
@@ -118,6 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signOut,
         updateRole,
+        updateProfile,
         refreshUser,
       }}
     >

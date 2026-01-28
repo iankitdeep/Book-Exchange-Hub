@@ -14,8 +14,9 @@ export type BookStatus = z.infer<typeof bookStatusEnum>;
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email").notNull().unique(),
+  email: text("email"),
   displayName: text("display_name").notNull(),
+  phoneNumber: text("phone_number"),
   avatarUrl: text("avatar_url"),
   role: text("role").notNull().default("buyer"),
   googleId: text("google_id").unique(),
@@ -59,6 +60,7 @@ export const conversations = pgTable("conversations", {
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   displayName: true,
+  phoneNumber: true,
   avatarUrl: true,
   role: true,
   googleId: true,

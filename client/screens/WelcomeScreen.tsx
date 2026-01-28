@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Image, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
 import * as Haptics from "expo-haptics";
 import { Feather } from "@expo/vector-icons";
 
@@ -12,71 +10,20 @@ import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
 import { Spacing } from "@/constants/theme";
 
-WebBrowser.maybeCompleteAuthSession();
-
 export default function WelcomeScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasGoogleConfig = !!(
-    process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ||
-    process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ||
-    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID
-  );
-
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    hasGoogleConfig
-      ? {
-          webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-          iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-          androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-        }
-      : {}
-  );
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      if (authentication?.accessToken) {
-        handleSignIn(authentication.accessToken);
-      }
-    } else if (response?.type === "error") {
-      Alert.alert("Authentication Error", "Failed to sign in with Google. Please try again.");
-    }
-  }, [response]);
-
-  async function handleSignIn(accessToken: string) {
+  async function handleContinue() {
     setIsLoading(true);
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await signIn(accessToken);
+      await signIn();
     } catch (error) {
       console.error("Sign in error:", error);
-      Alert.alert("Sign In Error", "Failed to sign in. Please try again.");
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function handleGoogleSignIn() {
-    if (!hasGoogleConfig || !request) {
-      Alert.alert(
-        "Configuration Required",
-        "Google Sign-In is not configured. Please set up Google OAuth credentials to enable authentication.",
-        [{ text: "OK" }]
-      );
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      await promptAsync();
-    } catch (error) {
-      console.error("Google sign in error:", error);
-      Alert.alert("Error", "Failed to initiate Google Sign-In");
     } finally {
       setIsLoading(false);
     }
@@ -110,14 +57,14 @@ export default function WelcomeScreen() {
       </View>
       <View style={styles.footer}>
         <Button
-          onPress={handleGoogleSignIn}
+          onPress={handleContinue}
           disabled={isLoading}
-          style={[styles.googleButton, { backgroundColor: theme.primary }]}
+          style={[styles.continueButton, { backgroundColor: theme.primary }]}
         >
           <View style={styles.buttonContent}>
-            <Feather name="log-in" size={20} color="#FFFFFF" />
+            <Feather name="arrow-right" size={20} color="#FFFFFF" />
             <ThemedText style={styles.buttonText}>
-              {isLoading ? "Signing in..." : "Continue with Google"}
+              {isLoading ? "Loading..." : "Continue"}
             </ThemedText>
           </View>
         </Button>
@@ -160,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: Spacing.xl,
   },
-  googleButton: {
+  continueButton: {
     width: "100%",
     marginBottom: Spacing.lg,
   },
