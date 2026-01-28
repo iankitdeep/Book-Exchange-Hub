@@ -178,8 +178,8 @@ export default function BookDetailScreen() {
             </View>
           </View>
 
-          {/* Desktop Buttons inline */}
-          {!isOwnBook && user?.role !== "admin" ? (
+          {/* Desktop Buttons inline - Showing for everyone for testing */}
+          {user?.role !== "admin" ? (
             <View style={{ flexDirection: "row", gap: Spacing.md, marginTop: Spacing.xl }}>
               <Button
                 variant="outline"
@@ -286,8 +286,8 @@ export default function BookDetailScreen() {
         </View>
       </ScrollView>
 
-      {/* Persistent Bottom Bar */}
-      {!isOwnBook && user?.role !== "admin" ? (
+      {/* Persistent Bottom Bar - Showing for everyone for testing */}
+      {user?.role !== "admin" ? (
         <View style={[styles.bottomBar, { backgroundColor: theme.backgroundRoot, borderTopColor: theme.border, paddingBottom: insets.bottom + Spacing.lg }]}>
           <Button
             variant="outline"
