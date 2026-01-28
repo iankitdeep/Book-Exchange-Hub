@@ -28,9 +28,8 @@ export function WebSidebar() {
         return (
             <Pressable
                 onPress={() => {
-                    // Navigate to the tab. Since we are in Main, bubbling *should* work, 
-                    // but targeting the specific screen ensures it switches.
-                    navigation.navigate(route as any);
+                    // Navigate to the tab using nested navigation pattern
+                    navigation.navigate("Main", { screen: route });
                 }}
                 style={({ pressed }) => [
                     styles.menuItem,
