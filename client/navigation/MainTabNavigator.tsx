@@ -70,9 +70,10 @@ export default function MainTabNavigator() {
             component={BrowseStackNavigator}
             options={{
               title: "Browse",
-              tabBarIcon: ({ color, size }) => (
-                <Feather name="search" size={size} color={color} />
-              ),
+              tabBarIcon: ({ color, size }) =>
+                Platform.OS === "android" ? null : (
+                  <Feather name="search" size={size} color={color} />
+                ),
             }}
           />
           <Tab.Screen
@@ -80,9 +81,10 @@ export default function MainTabNavigator() {
             component={MyBooksStackNavigator}
             options={{
               title: isSeller || isAdmin ? "My Listings" : "My Purchases",
-              tabBarIcon: ({ color, size }) => (
-                <Feather name="book" size={size} color={color} />
-              ),
+              tabBarIcon: ({ color, size }) =>
+                Platform.OS === "android" ? null : (
+                  <Feather name="book" size={size} color={color} />
+                ),
             }}
           />
           {isAdmin ? (
@@ -91,9 +93,10 @@ export default function MainTabNavigator() {
               component={AdminStackNavigator}
               options={{
                 title: "Dashboard",
-                tabBarIcon: ({ color, size }) => (
-                  <Feather name="grid" size={size} color={color} />
-                ),
+                tabBarIcon: ({ color, size }) =>
+                  Platform.OS === "android" ? null : (
+                    <Feather name="grid" size={size} color={color} />
+                  ),
               }}
             />
           ) : (
@@ -102,9 +105,10 @@ export default function MainTabNavigator() {
               component={MessagesStackNavigator}
               options={{
                 title: "Messages",
-                tabBarIcon: ({ color, size }) => (
-                  <Feather name="message-square" size={size} color={color} />
-                ),
+                tabBarIcon: ({ color, size }) =>
+                  Platform.OS === "android" ? null : (
+                    <Feather name="message-square" size={size} color={color} />
+                  ),
               }}
             />
           )}
@@ -113,9 +117,10 @@ export default function MainTabNavigator() {
             component={CartScreen}
             options={{
               title: "Cart",
-              tabBarIcon: ({ color, size }) => (
-                <Feather name="shopping-cart" size={size} color={color} />
-              ),
+              tabBarIcon: ({ color, size }) =>
+                Platform.OS === "android" ? null : (
+                  <Feather name="shopping-cart" size={size} color={color} />
+                ),
             }}
           />
           <Tab.Screen
@@ -123,9 +128,10 @@ export default function MainTabNavigator() {
             component={ProfileStackNavigator}
             options={{
               title: "Profile",
-              tabBarIcon: ({ color, size }) => (
-                <Feather name="user" size={size} color={color} />
-              ),
+              tabBarIcon: ({ color, size }) =>
+                Platform.OS === "android" ? null : (
+                  <Feather name="user" size={size} color={color} />
+                ),
             }}
           />
         </Tab.Navigator>
