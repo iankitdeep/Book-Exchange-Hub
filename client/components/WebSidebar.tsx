@@ -68,12 +68,14 @@ export function WebSidebar() {
 
     return (
         <View style={[styles.sidebar, { backgroundColor: theme.backgroundRoot, borderRightColor: theme.border, paddingTop: insets.top + Spacing.xl }]}>
-            <View style={styles.logoContainer}>
-                <RNImage
+                {/* <RNImage
                     source={require("../assets/images/app-logo.jpg")}
                     style={{ width: 40, height: 40, borderRadius: 8 }}
                     resizeMode="contain"
-                />
+                /> */}
+                <View style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: theme.primary, alignItems: "center", justifyContent: "center" }}>
+                    <Feather name="book-open" size={24} color="#FFF" />
+                </View>
                 <ThemedText type="h1" style={{ color: theme.primary, fontWeight: "900", fontSize: 28, fontFamily: "System" }}>
                     Swaply
                 </ThemedText>
@@ -91,7 +93,7 @@ export function WebSidebar() {
             <View style={styles.footer}>
                 {/* Settings or Logout could go here */}
             </View>
-        </View>
+        </View >
     );
 }
 

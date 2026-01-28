@@ -6,6 +6,7 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Animated, { FadeInLeft, FadeInDown } from "react-native-reanimated";
+import { Feather } from "@expo/vector-icons";
 
 import { BookCard } from "@/components/BookCard";
 import { SearchBar } from "@/components/SearchBar";
@@ -95,11 +96,14 @@ export default function BrowseScreen() {
         {width <= 768 && (
           <Animated.View entering={FadeInLeft.duration(600)}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: Spacing.sm, marginBottom: Spacing.md }}>
-              <RNImage
+              {/* <RNImage
                 source={require("../../assets/images/app-logo.jpg")}
                 style={{ width: 36, height: 36, borderRadius: 8 }}
                 resizeMode="contain"
-              />
+              /> */}
+              <View style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: theme.primary, alignItems: "center", justifyContent: "center" }}>
+                <Feather name="book-open" size={20} color="#FFF" />
+              </View>
               <ThemedText type="h1" style={[styles.appTitle, { marginBottom: 0, color: theme.primary }]}>
                 Swaply
               </ThemedText>
