@@ -54,6 +54,11 @@ export default function MainTabNavigator() {
               borderTopWidth: 0,
               elevation: 0,
             },
+            tabBarLabelStyle: {
+              fontSize: 14,
+              fontWeight: "600",
+              paddingBottom: Platform.OS === "android" ? 12 : 0, // Add padding on Android since icons are gone
+            },
             tabBarBackground: () =>
               Platform.OS === "ios" && !isDesktop ? (
                 <BlurView
