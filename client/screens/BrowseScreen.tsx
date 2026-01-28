@@ -41,7 +41,7 @@ export default function BrowseScreen() {
   const { width } = useWindowDimensions();
 
   // Responsive columns
-  const numColumns = width > 1024 ? 4 : width > 768 ? 3 : 2;
+  const numColumns = width > 768 ? 4 : 2;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
